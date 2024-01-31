@@ -8,14 +8,6 @@ import { Recipe } from '../recipe.model';
 })
 export class RecipeListComponent implements OnInit {
   ngOnInit(): void {}
-  maxDescriptionLength = 1; // Adjust as needed
-    showFullDescription = false;
-
-    toggleDescription(recipe:ElementRef) {
-        this.showFullDescription = !this.showFullDescription;
-        if(this.showFullDescription)
-        recipe.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
 
   recipes: Recipe[] = [
     new Recipe(

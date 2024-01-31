@@ -2,28 +2,7 @@
     <div class="col-12 mb-3">
         <button class="btn btn-success my-3">New Recipe</button>
     </div>
-    <div class="col-lg-4 col-md-6 mb-4"
-         *ngFor="let recipe of recipes; let i = index"
-         #recipe>
-        <div class="card rounded-4"
-             style="max-height:379px; min-height:200px; min-width: 150px;">
-            <img [src]="recipe.imagePath"
-                 alt="{{ recipe.name }}"
-                 class="zoomed-image card-img-top img-fluid rounded-top-4">
-            <div class="card-body">
-                <h5 class="card-title fs-6">{{ recipe.name }}</h5>
-                <p class="card-text ellipsis" *ngIf="!showFullDescription">{{ recipe.description }}</p>
-                <p class="card-text" *ngIf="showFullDescription">{{ recipe.description }}</p>
-                <a class="read-more"
-                   *ngIf="recipe.description.length > maxDescriptionLength"
-                   (click)="toggleDescription(recipe)">
-                    {{ showFullDescription ? 'Read Less' : 'Read More' }}
-                    
-                </a>
-                <ul class="list-group my-2">
-                    <button class="btn btn-primary"> book</button>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <app-recipe-item class="col-lg-4 col-md-6 mb-4" *ngFor="let recipeEL of recipes"
+                    [recipe]="recipeEL" >
+    </app-recipe-item>
 </div>
