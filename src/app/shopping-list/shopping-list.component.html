@@ -5,7 +5,8 @@
         <ul class="list-group ">
             @for(ingredient of ingredients; track ingredient){
             <div class="list-group-item"
-                 style="cursor: pointer">
+                 style="cursor: pointer"
+                 appBetterHighlight highlightColor="brown">
                 {{ingredient.name}} ({{ingredient.amount}})
             </div>
             } @empty {
