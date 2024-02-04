@@ -1,25 +1,44 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <button type="button" title="burgerBtn" class="navbar-toggler" (click)="collapsed = !collapsed">
-        <span class="navbar-toggler-icon"></span>
+  <div class="container-fluid">
+    <button type="button"
+            title="burgerBtn"
+            class="navbar-toggler"
+            (click)="collapsed = !collapsed">
+      <span class="navbar-toggler-icon"></span>
     </button>
-        <a class="navbar-brand" href="#">Recipe Book</a>
+    <a class="navbar-brand"
+       href="#">Recipe Book</a>
 
-        <div class="collapse navbar-collapse" [class.collapse]="collapsed" (window:resize)="collapsed = true">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="#" (click)="onSelect('recipe')">Recipes</a></li>
-                <li class="nav-item"><a class="nav-link" href="#" (click)="onSelect('shopping-list')">Shopping List</a></li>
-            </ul>
-            
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Manage</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Saving Data</a>
-                        <a class="dropdown-item" href="#">Fetch Data</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
+    <div class="collapse navbar-collapse"
+         [class.collapse]="collapsed"
+         (window:resize)="collapsed = true">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link"
+             href="#"
+             (click)="onSelect('recipe')">Recipes</a></li>
+        <li class="nav-item"><a class="nav-link"
+             href="#"
+             (click)="onSelect('shopping-list')">Shopping List</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto" style="margin-right: 80px;">
+        <li class="nav-item">
+          <a class="nav-link dropdown-toggle"
+             href="#"
+             role="button"
+             appDropdown
+             #r="appDropdown"
+             data-bs-toggle="dropdown">Manage</a>
+          <div class="dropdown-menu" [ngClass]="{'show': r.isOpen}" style="margin-right:150px; max-width:30px !important;">
+            <a class="dropdown-item"
+               href="#"
+               appBetterHighlight="var(--custom-primary)">Saving Data</a>
+            <a class="dropdown-item"
+               href="#"
+               appBetterHighlight="var(--custom-primary)">Fetch Data</a>
+          </div>
+        </li>
+      </ul>
+
     </div>
+  </div>
 </nav>
