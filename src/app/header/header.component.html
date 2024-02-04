@@ -20,7 +20,8 @@
              href="#"
              (click)="onSelect('shopping-list')">Shopping List</a></li>
       </ul>
-      <ul class="navbar-nav ms-auto" style="margin-right: 80px;">
+      <ul class="navbar-nav ms-auto"
+          style="margin-right: 0px;">
         <li class="nav-item">
           <a class="nav-link dropdown-toggle"
              href="#"
@@ -28,7 +29,9 @@
              appDropdown
              #r="appDropdown"
              data-bs-toggle="dropdown">Manage</a>
-          <div class="dropdown-menu" [ngClass]="{'show': r.isOpen}" style="margin-right:150px; max-width:30px !important;">
+          <div class="dropdown-menu"
+               [ngClass]="{'show': r.isOpen}"
+               style="min-width:30px !important; position: absolute; right:20px; top:60px">
             <a class="dropdown-item"
                href="#"
                appBetterHighlight="var(--custom-primary)">Saving Data</a>
@@ -38,7 +41,6 @@
           </div>
         </li>
       </ul>
-
     </div>
   </div>
 </nav>
