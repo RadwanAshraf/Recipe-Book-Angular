@@ -9,6 +9,7 @@ import { RecipeService } from '../../../service/recipe.service';
 })
 export class RecipeItemComponent implements OnInit {
   @Input() recipe!: Recipe;
+  @Input() index!:number;
   maxDescriptionLength = 1;
   showFullDescription = false;
   constructor(private recipeService: RecipeService) {}
@@ -22,9 +23,6 @@ export class RecipeItemComponent implements OnInit {
         behavior: 'smooth',
         block: 'start',
       });
-  }
-  onSelected() {
-    this.recipeService.recipeSelected.emit(this.recipe);
   }
   addToShoppingList(){
     this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients)
