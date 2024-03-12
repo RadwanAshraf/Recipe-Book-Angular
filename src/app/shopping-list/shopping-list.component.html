@@ -6,7 +6,8 @@
       @for(ingredient of ingredients; track ingredient){
       <div class="list-group-item"
            style="cursor: pointer"
-           appBetterHighlight="var( --custom-primary)">
+           appBetterHighlight="var( --custom-primary)"
+           (click)="onEditItem(ingredient)">
         {{ingredient.name}} ({{ingredient.amount}})
       </div>
       } @empty {
