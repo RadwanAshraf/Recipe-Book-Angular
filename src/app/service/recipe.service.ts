@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { Recipe } from '../recipes/recipe.model';
 import { Ingredient } from '../Shared/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecipeService {
+  recipesChanged = new Subject<Recipe[]>();
   private recipes: Recipe[] = [
     new Recipe(
       'Basic Crêpes',
@@ -41,15 +43,55 @@ export class RecipeService {
         new Ingredient('Cream chante', 1),
       ]
     ),
+    new Recipe(
+      'Corned Beef and Cabbage',
+      'Corned Beef and Cabbage is a beloved dish that captures the essence of Irish-American cuisine. It\'s a meal that’s both satisfying and symbolic of the holiday\ncozy enough to warm you up in the last few days of chilly weather and hearty enough to keep full you through a few celebratory rounds of Guinness.',
+      'https://www.allrecipes.com/thmb/mte7GTJNI2lb3XLfW8uKtj2cMR8=/800x533/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/16310-Corned-Beef-and-Cabbage-I-4x3-cropped-c59bbef3e2944b6dac06226e05079fbe.jpg',
+      [
+        new Ingredient('corned beef brisket', 2),
+        new Ingredient('Pickling spices ', 1),
+        new Ingredient('cabbage', 1),
+        new Ingredient('potatoes', 1),
+        new Ingredient('carrots', 1),
+        new Ingredient('onion', 1),
+        new Ingredient('Mustard', 1),
+        new Ingredient('Black peppercorns', 1),
+      ]
+    ),
+    new Recipe(
+      'Buffalo Cauliflower',
+      'Though we haven\'t tested this ourselves, one helpful idea comes from Allrecipes user Pauline who put her own spin on the dish: "I added the hot sauce & honey to the batter (skipped the butter) and roasted the florets at 450 for about 13 minutes. Sheer greatness! The batter stuck to the pieces well and cooked up just right."',
+      'https://www.allrecipes.com/thmb/0Q_2q0fAex8Qjq1Nf8wiANxnWFI=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/239616-buffalo-cauliflower-DDMFS-4x3-dbc3ece590024fa0bb3f45773f1d511a.jpg',
+      [
+        new Ingredient('cauliflower', 2),
+        new Ingredient('Garlic powder', 1),
+        new Ingredient('Onion powder', 1),
+        new Ingredient('paprika', 1),
+        new Ingredient('Salt ', 1),
+        new Ingredient('pepper ', 1),
+      ]
+    ),
   ];
   constructor(private slService: ShoppingListService) {}
+  addRecipe(recipe: Recipe) {
+    this.recipes.push(recipe);
+    this.recipesChanged.next(this.recipes.slice());
+  }
+  updateRecipe(index: number, newRecipe: Recipe) {
+    this.recipes[index] = newRecipe;
+    this.recipesChanged.next(this.recipes.slice());
+  }
   getRecipes() {
     return this.recipes.slice();
   }
-  getRecipe(index:number){
+  getRecipe(index: number) {
     return this.recipes[index];
   }
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
     this.slService.addIngredients(ingredients);
+  }
+  deleteRecipe(index:number){
+    this.recipes.splice(index,1);
+    this.recipesChanged.next(this.recipes.slice());
   }
 }
