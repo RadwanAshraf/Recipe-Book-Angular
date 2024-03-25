@@ -32,7 +32,7 @@
                [ngClass]="{'show': r.isOpen}"
                style="min-width:30px !important; position: absolute; right:20px; top:60px; cursor: pointer;">
             <a class="dropdown-item"
-               appBetterHighlight="var(--custom-primary)">Saving Data</a>
+               appBetterHighlight="var(--custom-primary)" (click)="onSaveResipes()">Saving Data</a>
             <a class="dropdown-item"
                appBetterHighlight="var(--custom-primary)">Fetch Data</a>
           </div>
