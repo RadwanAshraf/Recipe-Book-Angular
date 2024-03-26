@@ -3,13 +3,14 @@ import { Recipe } from '../recipes/recipe.model';
 import { Ingredient } from '../Shared/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
 import { Subject } from 'rxjs';
+import { DataStorageService } from '../Shared/data-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecipeService {
-  recipesChanged = new Subject<Recipe[]>();
-  private recipes: Recipe[] = [
+  /* private recipes: Recipe[] = [
+
     new Recipe(
       'Basic Crêpes',
       'This simple but delicious crêpe recipe can be made in minutes from ingredients that everyone has on hand.',
@@ -45,7 +46,7 @@ export class RecipeService {
     ),
     new Recipe(
       'Corned Beef and Cabbage',
-      'Corned Beef and Cabbage is a beloved dish that captures the essence of Irish-American cuisine. It\'s a meal that’s both satisfying and symbolic of the holiday\ncozy enough to warm you up in the last few days of chilly weather and hearty enough to keep full you through a few celebratory rounds of Guinness.',
+      "Corned Beef and Cabbage is a beloved dish that captures the essence of Irish-American cuisine. It's a meal that’s both satisfying and symbolic of the holiday\ncozy enough to warm you up in the last few days of chilly weather and hearty enough to keep full you through a few celebratory rounds of Guinness.",
       'https://www.allrecipes.com/thmb/mte7GTJNI2lb3XLfW8uKtj2cMR8=/800x533/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/16310-Corned-Beef-and-Cabbage-I-4x3-cropped-c59bbef3e2944b6dac06226e05079fbe.jpg',
       [
         new Ingredient('corned beef brisket', 2),
@@ -72,7 +73,13 @@ export class RecipeService {
       ]
     ),
   ];
-  constructor(private slService: ShoppingListService) {}
+  */
+
+  private recipes:Recipe[]=[];
+  recipesChanged = new Subject<Recipe[]>();
+  constructor(private slService: ShoppingListService) {
+   // dataStorage.fetchRecipes();
+  }
   addRecipe(recipe: Recipe) {
     this.recipes.push(recipe);
     this.recipesChanged.next(this.recipes.slice());
@@ -81,7 +88,12 @@ export class RecipeService {
     this.recipes[index] = newRecipe;
     this.recipesChanged.next(this.recipes.slice());
   }
+  setRecipes(recipes: Recipe[]) {
+    this.recipes = recipes;
+    this.recipesChanged.next(this.recipes.slice());
+  }
   getRecipes() {
+    //this.dataStorage.fetchRecipes();
     return this.recipes.slice();
   }
   getRecipe(index: number) {
@@ -90,8 +102,8 @@ export class RecipeService {
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
     this.slService.addIngredients(ingredients);
   }
-  deleteRecipe(index:number){
-    this.recipes.splice(index,1);
+  deleteRecipe(index: number) {
+    this.recipes.splice(index, 1);
     this.recipesChanged.next(this.recipes.slice());
   }
 }

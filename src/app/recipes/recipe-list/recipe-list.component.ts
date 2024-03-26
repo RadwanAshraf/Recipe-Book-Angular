@@ -4,6 +4,7 @@ import { RecipeService } from '../../service/recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { relative } from 'path';
 import { Subscription } from 'rxjs';
+import { DataStorageService } from '../../Shared/data-storage.service';
 @Component({
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
@@ -16,7 +17,8 @@ export class RecipeListComponent implements OnInit ,OnDestroy{
   constructor(
     private recipeService: RecipeService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dataStorage: DataStorageService
   ) {}
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -26,6 +28,7 @@ export class RecipeListComponent implements OnInit ,OnDestroy{
       this.recipes = newRecipes;
       console.log('update');
     });
+    this.dataStorage.fetchRecipes();
     this.recipes = this.recipeService.getRecipes();
   }
   onNewRecipe() {
