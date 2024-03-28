@@ -15,7 +15,8 @@ export class RecipeDetailComponent implements OnInit {
     private recipeService: RecipeService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {  console.log('the Details Recipe Constractor Was Called');
+}
   ngOnInit(): void {
     this.route.params.subscribe((param: Params) => {
       this.id = +param['id']; //casting id to number

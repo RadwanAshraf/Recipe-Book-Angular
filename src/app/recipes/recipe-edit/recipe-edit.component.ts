@@ -24,7 +24,9 @@ export class RecipeEditComponent implements OnInit {
     private recipeService: RecipeService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+    console.log('the Edit Recipe Constractor Was Called');
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe((param: Params) => {
@@ -73,17 +75,11 @@ export class RecipeEditComponent implements OnInit {
     return (<FormArray>this.recipeForm.get('ingredients')).controls;
   }
   onSubmit() {
-    // const newRecipe=new Recipe(
-    //   this.recipeForm.value['name'],
-    //   this.recipeForm.value['description'],
-    //   this.recipeForm.value['imagePath'],
-    //   this.recipeForm.value['ingredients'],
-    // );
     if (this.editMode) {
       this.recipeService.updateRecipe(this.index, this.recipeForm.value);
     } else this.recipeService.addRecipe(this.recipeForm.value);
 
-    this.onCancel()
+    this.onCancel();
   }
 
   onAddIngredient() {
@@ -98,7 +94,7 @@ export class RecipeEditComponent implements OnInit {
     );
   }
 
-  onRemoveIngredient(index:number){
+  onRemoveIngredient(index: number) {
     (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
   }
 

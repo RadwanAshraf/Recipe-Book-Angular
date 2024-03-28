@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Recipe } from '../recipes/recipe.model';
 import { Ingredient } from '../Shared/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
 import { Subject } from 'rxjs';
-import { DataStorageService } from '../Shared/data-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -75,10 +74,11 @@ export class RecipeService {
   ];
   */
 
-  private recipes:Recipe[]=[];
+  private recipes: Recipe[] = [];
+  intialFetch: Boolean = false;
   recipesChanged = new Subject<Recipe[]>();
   constructor(private slService: ShoppingListService) {
-   // dataStorage.fetchRecipes();
+    console.log('the RecipeService List Constractor Was Called');
   }
   addRecipe(recipe: Recipe) {
     this.recipes.push(recipe);
@@ -93,10 +93,12 @@ export class RecipeService {
     this.recipesChanged.next(this.recipes.slice());
   }
   getRecipes() {
-    //this.dataStorage.fetchRecipes();
     return this.recipes.slice();
   }
   getRecipe(index: number) {
+    if (this.recipes === null) {
+      this.recipes = []; // Initialize to an empty array
+    }
     return this.recipes[index];
   }
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
