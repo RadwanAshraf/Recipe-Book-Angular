@@ -19,6 +19,9 @@
         <li class="nav-item"
             routerLinkActive="active"><a class="nav-link"
              routerLink="/shopping-list">Shopping List</a></li>
+        <li class="nav-item"
+            routerLinkActive="active"><a class="nav-link"
+             routerLink="/auth">Authenticate</a></li>
       </ul>
       <ul class="navbar-nav ms-auto"
           style="margin-right: 0px;">
@@ -32,9 +35,11 @@
                [ngClass]="{'show': r.isOpen}"
                style="min-width:30px !important; position: absolute; right:20px; top:60px; cursor: pointer;">
             <a class="dropdown-item"
-               appBetterHighlight="var(--custom-primary)" (click)="onSaveResipes()">Saving Data</a>
+               appBetterHighlight="var(--custom-primary)"
+               (click)="onSaveResipes()">Saving Data</a>
             <a class="dropdown-item"
-               appBetterHighlight="var(--custom-primary)" (click)="onFetchRecipes()">Fetch Data</a>
+               appBetterHighlight="var(--custom-primary)"
+               (click)="onFetchRecipes()">Fetch Data</a>
           </div>
         </li>
       </ul>
