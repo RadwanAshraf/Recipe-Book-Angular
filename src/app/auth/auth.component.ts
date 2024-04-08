@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AuthResposeDate, AuthService } from './auth.service';
 import { error } from 'console';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -13,7 +14,7 @@ export class AuthComponent {
   isLoginMode = false;
   isLoadning = false;
   error!: string;
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,private router:Router) {}
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
   }
@@ -35,6 +36,7 @@ export class AuthComponent {
       next: (resData: AuthResposeDate) => {
         console.log(resData);
         this.isLoadning = false;
+        this.router.navigate(['/recipes']);
       },
       error: (errorMessage: any) => {
         this.error = errorMessage;
