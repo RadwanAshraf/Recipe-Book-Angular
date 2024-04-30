@@ -1,10 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, tap } from 'rxjs/operators';
-import { Subject, throwError } from 'rxjs';
-import { Console } from 'node:console';
+import { BehaviorSubject, throwError } from 'rxjs';
 import { User } from './user.model';
-import e from 'express';
 
 export interface AuthResposeDate {
   idToken: string;
@@ -16,7 +14,8 @@ export interface AuthResposeDate {
 }
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  user = new Subject<User>();
+  defaultUser!:User;
+  user = new BehaviorSubject<User>(this.defaultUser);
   constructor(private http: HttpClient) {}
   signup(email: string, password: string) {
     return this.http
@@ -73,6 +72,7 @@ export class AuthService {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(email, userId, token, expirationDate);
     this.user.next(user);
+    console.log('User Loged:'+this.user.subscribe(),'>>>>userID:'+user.token);
   }
   private handelError(errorRes: HttpErrorResponse) {
     let errorMessage = 'An error occurred. Please try again later!';
@@ -81,6 +81,9 @@ export class AuthService {
     //}
     console.log('ErrorMessage:' + errorRes.error.error.message);
     switch (errorRes.error.error.message) {
+      case 'EMAIL_NOT_FOUND':
+        errorMessage = 'The user may have been deleted!';
+        break;
       case 'EMAIL_EXISTS':
         errorMessage = 'This email already exists.';
         break;
@@ -88,6 +91,6 @@ export class AuthService {
         errorMessage = 'This email or password in not correct.';
         break;
     }
-    return throwError(() => new Error(errorMessage)); // Return an Observable that emits the error message
+    return throwError(() => errorMessage); // Return an Observable that emits the error message
   }
 }
