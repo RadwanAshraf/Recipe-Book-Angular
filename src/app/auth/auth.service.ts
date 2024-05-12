@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, tap } from 'rxjs/operators';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { User } from './user.model';
+import { Router } from '@angular/router';
 
 export interface AuthResposeDate {
   idToken: string;
@@ -14,9 +15,10 @@ export interface AuthResposeDate {
 }
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  defaultUser!:User;
-  user = new BehaviorSubject<User>(this.defaultUser);
-  constructor(private http: HttpClient) {}
+  defaultUser!: User;
+  user = new BehaviorSubject<User | null>(this.defaultUser);
+  private tokenExiprationTimer: any;
+  constructor(private http: HttpClient, private router: Router) {}
   signup(email: string, password: string) {
     return this.http
       .post<AuthResposeDate>(
@@ -62,7 +64,50 @@ export class AuthService {
         })
       );
   }
+  autoLogin() {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const userDataString = window.localStorage.getItem('userData');
+      if (userDataString) {
+        let userData: {
+          email: string;
+          id: string;
+          _token: string;
+          _tokenExpirationDate: string;
+        } = JSON.parse(userDataString);
+        if (!userData) {
+          return;
+        }
+        const loadedUser = new User(
+          userData.email,
+          userData.id,
+          userData._token,
+          new Date(userData._tokenExpirationDate)
+        );
+        if (loadedUser.token) {
+          this.user.next(loadedUser);
+          const expirationDuration =
+            new Date(userData._tokenExpirationDate).getTime() -
+            new Date().getTime();
+          this.autoLogout(expirationDuration);
+        }
+      }
+    }
+  }
 
+  logout() {
+    this.user.next(null);
+    this.router.navigate(['/auth']);
+    localStorage.removeItem('userData');
+    if (this.tokenExiprationTimer) {
+      clearTimeout(this.tokenExiprationTimer);
+    }
+    this.tokenExiprationTimer = null;
+  }
+  autoLogout(exiprationDuration: number) {
+    this.tokenExiprationTimer = setTimeout(() => {
+      this.logout();
+    }, exiprationDuration);
+  }
   private handelAuthentication(
     email: string,
     userId: string,
@@ -72,13 +117,16 @@ export class AuthService {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(email, userId, token, expirationDate);
     this.user.next(user);
-    console.log('User Loged:'+this.user.subscribe(),'>>>>userID:'+user.token);
+    this.autoLogout(expiresIn * 1000);
+    localStorage.setItem('userData', JSON.stringify(user));
+    console.log('localStorage:' + localStorage.getItem('userData'));
+    console.log(
+      'User Loged:' + this.user.subscribe(),
+      '>>>>userID:' + user.token
+    );
   }
   private handelError(errorRes: HttpErrorResponse) {
     let errorMessage = 'An error occurred. Please try again later!';
-    // if (!errorRes.error || !errorRes.error.error) {
-    // return throwError(() => new Error(errorMessage));
-    //}
     console.log('ErrorMessage:' + errorRes.error.error.message);
     switch (errorRes.error.error.message) {
       case 'EMAIL_NOT_FOUND':

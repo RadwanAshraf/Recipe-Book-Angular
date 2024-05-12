@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../../service/recipe.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { compileClassDebugInfo } from '@angular/compiler';
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
@@ -11,17 +13,32 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 export class RecipeDetailComponent implements OnInit {
   recipe!: Recipe;
   id!: number;
+  private routerEventsSubscription!: Subscription;
+  private recipeUpdateSubscription!: Subscription;
+
   constructor(
     private recipeService: RecipeService,
     private route: ActivatedRoute,
     private router: Router
   ) {  console.log('the Details Recipe Constractor Was Called');
+       this.recipe =new Recipe("recipe","d","d",[]);
 }
   ngOnInit(): void {
+    this.id=+this.route.snapshot.params['id'];
+    this.routerEventsSubscription=this.router.events
+    .pipe(filter((rs):rs is NavigationEnd=>rs instanceof NavigationEnd))
+    .subscribe(event=>{
+      if(event.id===1 && event.url ===event.urlAfterRedirects){
+        this.updateRecipe();
+      }
+    });
     this.route.params.subscribe((param: Params) => {
       this.id = +param['id']; //casting id to number
-      this.recipe = this.recipeService.getRecipe(this.id);
+      this.updateRecipe();
     });
+
+    // Initial load of recipe
+    this.recipe = this.recipeService.getRecipe(this.id);
   }
   onAddToShoppingList() {
     this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
@@ -33,5 +50,13 @@ export class RecipeDetailComponent implements OnInit {
   onDeleteRecipe() {
     this.recipeService.deleteRecipe(this.id);
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+  private updateRecipe(): void {
+    this.recipe = this.recipeService.getRecipe(this.id);
+  }
+  ngOnDestroy(): void {
+    if (this.routerEventsSubscription) {
+      this.routerEventsSubscription.unsubscribe();
+    }
   }
 }
